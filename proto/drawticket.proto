@@ -1,0 +1,18 @@
+syntax = "proto3";
+
+package drawticket;
+
+service DrawticketService {
+  rpc CreateDrawticket (CreateDrawticketRequest) returns (CreateDrawticketResponse) {}
+}
+
+message CreateDrawticketRequest {
+  string suiAddress = 1;
+  int32 quantity = 2;
+}
+
+message CreateDrawticketResponse {
+  int32 status = 1;
+  repeated string error = 2;
+  int32 id = 3;
+}

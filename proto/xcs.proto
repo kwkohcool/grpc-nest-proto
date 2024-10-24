@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package xcs;
+
+service XcsService {
+  rpc CreateXcs (CreateXcsRequest) returns (CreateXcsResponse) {}
+}
+
+message CreateXcsRequest {
+  string suiAddress = 1;
+}
+
+message CreateXcsResponse {
+  int32 status = 1;
+  repeated string error = 2;
+  int32 id = 3;
+}
