@@ -3,16 +3,49 @@ syntax = "proto3";
 package drawticket;
 
 service DrawticketService {
-  rpc CreateDrawticket (CreateDrawticketRequest) returns (CreateDrawticketResponse) {}
+  rpc GetBuyLimit (GetBuyLimitRequest) returns (GetBuyLimitResponse) {}
+  rpc GetBuyDrawticketTx (GetBuyDrawticketTxRequest) returns (SponsoredTxResponse) {}
+  // TODO: Move this method after implementing NTx service.
+  rpc GetJoinNtxTokensTx (GetJoinNtxTokensTxRequest) returns (SponsoredTxResponse) {}
+  rpc ExecuteSponsoredTx (ExecuteSponsoredTxRequest) returns (ExecuteSponsoredTxResponse) {}
 }
 
-message CreateDrawticketRequest {
+message GetBuyLimitRequest {
   string suiAddress = 1;
-  int32 quantity = 2;
 }
 
-message CreateDrawticketResponse {
+message GetBuyLimitResponse {
+  int32 status = 1;
+  repeated string error = 2;
+  int32 bought = 3;
+  int32 left = 4;
+}
+
+message GetBuyDrawticketTxRequest {
+  string suiAddress = 1;
+}
+
+message GetJoinNtxTokensTxRequest {
+  string suiAddress = 1;
+}
+
+message SponsoredTxResponse {
   int32 status = 1;
   repeated string error = 2;
   int32 id = 3;
+  string bytes = 4;
+  string digest = 5;
+}
+
+message ExecuteSponsoredTxRequest {
+  int32 status = 1;
+  repeated string error = 2;
+  string digest = 3;
+  string signature = 4;
+}
+
+message ExecuteSponsoredTxResponse {
+  int32 status = 1;
+  repeated string error = 2;
+  string digest = 3;
 }
