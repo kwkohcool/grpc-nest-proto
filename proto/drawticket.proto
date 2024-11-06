@@ -38,9 +38,8 @@ message SponsoredTxResponse {
 }
 
 message ExecuteSponsoredTxRequest {
-  int32 status = 1;
-  string digest = 2;
-  string signature = 3;
+  string digest = 1;
+  string signature = 2;
 }
 
 message ExecuteSponsoredTxResponse {
