@@ -3,6 +3,7 @@ syntax = "proto3";
 package drawticket;
 
 service DrawticketService {
+  rpc FindBuyLimit (GetBuyLimitRequest) returns (GetBuyLimitResponse) {}
   rpc GetBuyLimit (GetBuyLimitRequest) returns (GetBuyLimitResponse) {}
   rpc GetBuyDrawticketTx (GetBuyDrawticketTxRequest) returns (SponsoredTxResponse) {}
   // TODO: Move this method after implementing NTx service.
