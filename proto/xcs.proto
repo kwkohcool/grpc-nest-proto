@@ -3,15 +3,16 @@ syntax = "proto3";
 package xcs;
 
 service XcsService {
-  rpc CreateXcs (CreateXcsRequest) returns (CreateXcsResponse) {}
+  rpc DrawXcs (DrawXcsRequest) returns (DrawXcsResponse) {}
 }
 
-message CreateXcsRequest {
+message DrawXcsRequest {
   string suiAddress = 1;
 }
 
-message CreateXcsResponse {
+message DrawXcsResponse {
   int32 status = 1;
   repeated string error = 2;
-  int32 id = 3;
+  string digest = 3;
+  string xcsDrawn = 4;
 }

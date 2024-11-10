@@ -70,3 +70,27 @@ message ExecuteJoinNtxTokensTxResponse {
   repeated string error = 2;
   string digest = 3;
 }
+
+message GetDrawticketSpendTxRequest {
+  string suiAddress = 1;
+}
+
+message GetDrawticketSpendTxResponse {
+  int32 status = 1;
+  repeated string error = 2;
+  string bytes = 3;
+  string digest = 4;
+}
+
+message ExecuteDrawticketSpendTxRequest {
+  string suiAddress = 1;
+  string digest = 2;
+  string signature = 3;
+}
+
+message ExecuteDrawticketSpendTxResponse {
+  int32 status = 1;
+  repeated string error = 2;
+  string digest = 3;
+  string status = 4;
+}
