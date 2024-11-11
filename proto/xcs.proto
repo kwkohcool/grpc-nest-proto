@@ -3,14 +3,30 @@ syntax = "proto3";
 package xcs;
 
 service XcsService {
-  rpc DrawXcs (DrawXcsRequest) returns (DrawXcsResponse) {}
+  rpc GetDrawXcsTx (GetDrawXcsTxRequest) returns (GetDrawXcsTxResponse) {}
+  rpc ExecuteDrawXcsTx (ExecuteDrawXcsTxRequest) returns (ExecuteDrawXcsTxResponse) {}
 }
 
-message DrawXcsRequest {
+message GetDrawXcsTxRequest {
   string suiAddress = 1;
 }
 
-message DrawXcsResponse {
+message GetDrawXcsTxResponse {
+  int32 status = 1;
+  repeated string error = 2;
+  int32 drawId = 3;
+  string bytes = 4;
+  string digest = 5;
+}
+
+message ExecuteDrawXcsTxRequest {
+  int32 drawId = 1;
+  string suiAddress = 2;
+  string digest = 3;
+  string signature = 4;
+}
+
+message ExecuteDrawXcsTxResponse {
   int32 status = 1;
   repeated string error = 2;
   string digest = 3;
