@@ -66,5 +66,5 @@ message ValidateSuiAccountResponse {
   int32 status = 1;
   repeated string error = 2;
   string address = 3;
-  string sub = 4
+  string sub = 4;
 }
