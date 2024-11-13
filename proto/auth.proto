@@ -23,14 +23,16 @@ message RegisterResponse {
 // Login
 
 message LoginRequest {
-  string email = 1;
-  string password = 2;
+  string address = 1;
+  string signature = 2;
 }
 
 message LoginResponse {
   int32 status = 1;
   repeated string error = 2;
-  string token = 3;
+  string suiAddress = 3;
+  string accessToken = 4;
+  string refreshToken = 5;
 }
 
 // Validate
