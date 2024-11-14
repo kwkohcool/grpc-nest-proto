@@ -1,27 +1,12 @@
 syntax = "proto3";
 
-import "google/protobuf/empty.proto";
-
 package auth;
 
 service AuthService {
-  rpc Register (RegisterRequest) returns (RegisterResponse) {}
   rpc Login (LoginRequest) returns (LoginResponse) {}
-  rpc Logout (google.protobuf.Empty) returns (LogoutResponse) {}
-  rpc Validate (ValidateRequest) returns (ValidateResponse) {}
+  rpc Logout (LogoutRequest) returns (LogoutResponse) {}
   rpc ValidateSuiAccount (ValidateSuiAccountRequest) returns (ValidateSuiAccountResponse) {}
-}
-
-// Register
-
-message RegisterRequest {
-  string email = 1;
-  string password = 2;
-}
-
-message RegisterResponse {
-  int32 status = 1;
-  repeated string error = 2;
+  rpc RefreshToken (RefreshTokenRequest) returns (RefreshTokenResponse) {}
 }
 
 // Login
@@ -40,21 +25,14 @@ message LoginResponse {
 }
 
 // Logout
+
+message LogoutRequest {
+  string address = 1;
+}
+
 message LogoutResponse {
   int32 status = 1;
   repeated string error = 2;
-}
-
-// Validate
-
-message ValidateRequest {
-  string token = 1;
-}
-
-message ValidateResponse {
-  int32 status = 1;
-  repeated string error = 2;
-  int32 userId = 3;
 }
 
 message ValidateSuiAccountRequest {
@@ -67,4 +45,17 @@ message ValidateSuiAccountResponse {
   repeated string error = 2;
   string address = 3;
   string sub = 4;
+}
+
+// Refresh token
+
+message RefreshTokenRequest {
+  string address = 1;
+}
+
+message RefreshTokenResponse {
+  int32 status = 1;
+  repeated string error = 2;
+  string suiAddress = 3;
+  string refreshToken = 4;
 }
