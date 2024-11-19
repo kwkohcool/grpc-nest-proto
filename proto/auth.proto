@@ -6,7 +6,7 @@ service AuthService {
   rpc Login (LoginRequest) returns (LoginResponse) {}
   rpc Logout (LogoutRequest) returns (LogoutResponse) {}
   rpc ValidateSuiAccount (ValidateSuiAccountRequest) returns (ValidateSuiAccountResponse) {}
-  rpc RefreshToken (RefreshTokenRequest) returns (RefreshTokenResponse) {}
+  rpc RefreshAccessToken (RefreshTokenRequest) returns (RefreshTokenResponse) {}
 }
 
 // Login
@@ -51,13 +51,13 @@ message ValidateSuiAccountResponse {
 
 // Refresh token
 
-message RefreshTokenRequest {
+message RefreshAccessTokenRequest {
   string address = 1;
 }
 
-message RefreshTokenResponse {
+message RefreshAccessTokenResponse {
   int32 status = 1;
   repeated string error = 2;
   string suiAddress = 3;
-  string refreshToken = 4;
+  string accessToken = 4;
 }
