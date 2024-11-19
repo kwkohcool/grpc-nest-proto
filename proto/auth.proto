@@ -6,7 +6,7 @@ service AuthService {
   rpc Login (LoginRequest) returns (LoginResponse) {}
   rpc Logout (LogoutRequest) returns (LogoutResponse) {}
   rpc ValidateSuiAccount (ValidateSuiAccountRequest) returns (ValidateSuiAccountResponse) {}
-  rpc RefreshAccessToken (RefreshTokenRequest) returns (RefreshTokenResponse) {}
+  rpc RefreshAccessToken (RefreshAccessTokenRequest) returns (RefreshAccessTokenResponse) {}
 }
 
 // Login
