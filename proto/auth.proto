@@ -38,7 +38,6 @@ message LogoutResponse {
 message ValidateSuiAccountRequest {
   string address = 1;
   string signature = 2;
-  string isZkLogin = 3;
 }
 
 message ValidateSuiAccountResponse {
