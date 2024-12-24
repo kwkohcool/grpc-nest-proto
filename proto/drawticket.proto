@@ -1,10 +1,13 @@
 syntax = "proto3";
 
+import "google/protobuf/empty.proto";
+
 package drawticket;
 
 service DrawticketService {
   rpc GetBuyLimit (GetBuyLimitRequest) returns (GetBuyLimitResponse) {}
   rpc GetBuyDrawticketTx (GetBuyDrawticketTxRequest) returns (GetBuyDrawticketTxResponse) {}
+  rpc GetCurrentPrice (google.protobuf.Empty) returns (GetCurrentPriceResponse) {}
   // TODO: Move this method after implementing NTx service.
   rpc GetJoinNtxTokensTx (GetJoinNtxTokensTxRequest) returns (GetJoinNtxTokensTxResponse) {}
   rpc ExecuteBuyDrawticketTx (ExecuteBuyDrawticketTxRequest) returns (ExecuteBuyDrawticketTxResponse) {}
@@ -32,6 +35,13 @@ message GetBuyDrawticketTxResponse {
   int32 purchaseId = 3;
   string bytes = 4;
   string digest = 5;
+}
+
+message GetCurrentPriceResponse {
+  int32 status = 1;
+  repeated string error = 2;
+  int32 price = 3;
+  string currency = 4;
 }
 
 message GetJoinNtxTokensTxRequest {
