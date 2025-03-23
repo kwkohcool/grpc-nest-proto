@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package marketplace;
+
+service MarketplaceService {
+  rpc GetSellListingTx (GetSellListingTxRequest) returns (GetSellListingTxResponse) {}
+  rpc ExecuteSellListingTx (ExecuteSellListingTxRequest) returns (ExecuteSellListingTxResponse) {}
+}
+
+message GetSellListingTxRequest {
+  string suiAddress = 1;
+  string kind = 2;
+  int32 unitPrice = 3;
+  int32 amount = 4;
+}
+
+message GetSellListingTxResponse {
+  int32 status = 1;
+  repeated string error = 2;
+  int32 listId = 3;
+  string bytes = 4;
+  string digest = 5;
+}
+
+message ExecuteSellListingTxRequest {
+  int32 listId = 1;
+  string suiAddress = 2;
+  string digest = 3;
+  string signature = 4;
+}
+
+message ExecuteSellListingTxResponse {
+  int32 status = 1;
+  repeated string error = 2;
+  string digest = 3;
+}
