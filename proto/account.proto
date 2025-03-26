@@ -1,0 +1,112 @@
+syntax = "proto3";
+
+package account;
+
+service AccountService {
+  rpc getUserInfoByEpicId(GetUserInfoByEpicIdRequest) returns (GetUserInfoByEpicIdResponse);
+  rpc getUserInfoAll(GetUserInfoAllRequest) returns (GetUserInfoAllResponse);
+  rpc attachEpicAccount(AttachEpicAccountRequest) returns (AttachEpicAccountResponse);
+  rpc attachSuiAccount(AttachSuiAccountRequest) returns (AttachSuiAccountResponse);
+  rpc attachEvmAccount(AttachEvmAccountRequest) returns (AttachEvmAccountResponse);
+  rpc attachEmailAccount(AttachEmailAccountRequest) returns (AttachEmailAccountResponse);
+  rpc detachSuiAccount(DetachSuiAccountRequest) returns (DetachSuiAccountResponse);
+  rpc detachEvmAccount(DetachEvmAccountRequest) returns (DetachEvmAccountResponse);
+  rpc detachEmailAccount(DetachEmailAccountRequest) returns (DetachEmailAccountResponse);
+}
+
+message GetUserInfoByEpicIdRequest {
+  string epicAccountId = 1;
+}
+
+message GetUserInfoByEpicIdResponse {
+  int32 status = 1;
+  repeated string error = 2;
+  string suiAddress = 3;
+  string evmAddress = 4;
+  string email = 5;
+  string userId = 6;
+}
+
+message GetUserInfoAllRequest {
+  string userId = 1;
+}
+
+message GetUserInfoAllResponse {
+  int32 status = 1;
+  repeated string error = 2;
+  repeated string suiAddress = 3;
+  repeated string evmAddress = 4;
+  string email = 5;
+  string epicAccountId = 6;
+}
+
+message AttachEpicAccountRequest {
+  string epicAccountId = 1;
+}
+
+message AttachEpicAccountResponse {
+  int32 status = 1;
+  repeated string error = 2;
+  string userId = 3;
+  string epicAccountId = 4;
+}
+
+message AttachSuiAccountRequest {
+  string userId = 1;
+  string suiAddress = 2;
+}
+
+message AttachSuiAccountResponse {
+  int32 status = 1;
+  repeated string error = 2;
+}
+
+message AttachEvmAccountRequest {
+  string userId = 1;
+  string evmAddress = 2;
+}
+
+message AttachEvmAccountResponse {
+  int32 status = 1;
+  repeated string error = 2;
+}
+
+message AttachEmailAccountRequest {
+  string userId = 1;
+  string email = 2;
+}
+
+message AttachEmailAccountResponse {
+  int32 status = 1;
+  repeated string error = 2;
+}
+
+message DetachSuiAccountRequest {
+  string userId = 1;
+  string suiAddress = 2;
+}
+
+message DetachSuiAccountResponse {
+  int32 status = 1;
+  repeated string error = 2;
+}
+
+message DetachEvmAccountRequest {
+  string userId = 1;
+  string evmAddress = 2;
+}
+
+message DetachEvmAccountResponse {
+  int32 status = 1;
+  repeated string error = 2;
+}
+
+message DetachEmailAccountRequest {
+  string userId = 1;
+  string email = 2;
+}
+
+message DetachEmailAccountResponse {
+  int32 status = 1;
+  repeated string error = 2;
+}
