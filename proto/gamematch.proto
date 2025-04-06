@@ -1,0 +1,84 @@
+syntax = "proto3";
+
+import "google/protobuf/timestamp.proto";
+
+package gamematch;
+
+service GameMatchService {
+  rpc ConfigGameMatch (ConfigGameMatchRequest) returns (ConfigGameMatchResponse) {}
+  rpc VerifyGameMatch (VerifyGameMatchRequest) returns (VerifyGameMatchResponse) {}
+  rpc GetAllMatches (GetAllMatchesRequest) returns (GetAllMatchesResponse) {}
+  rpc GetMatchById (GetMatchDetailByIdRequest) returns (GetMatchDetailByIdResponse) {}
+  rpc GetMatchByEpicId (GetMatchesByEpicIdRequest) returns (GetMatchesByEpicIdResponse) {}
+}
+
+message ConfigGameMatchRequest {
+  int32 players = 1;
+  int32 ticketsRequired = 2;
+}
+message ConfigGameMatchResponse {
+  int32 status = 1;
+  repeated string error = 2;
+  int64 id = 3;
+  string matchUuid = 4;
+  int32 shardsPerTicket = 5;
+}
+message VerifyGameMatchRequest {
+  string matchUuid = 1;
+  int64 shardsPlayers = 2;
+  int64 shardsLeft = 3;
+}
+message VerifyGameMatchResponse {
+  int32 status = 1;
+  repeated string error = 2;
+  string matchUuid = 3;
+  string result = 4;
+}
+message MatchListItem {
+  int64 id = 1;
+  string matchUuid = 2;
+  google.protobuf.Timestamp startedAt = 3;
+  google.protobuf.Timestamp finishedAt = 4;
+}
+message MatchDetails {
+  int64 id = 1;
+  string matchUuid = 2;
+  int32 players = 3;
+  int64 shardsPlayers = 4;
+  int64 shardsLeft = 5;
+  google.protobuf.Timestamp startedAt = 6;
+  google.protobuf.Timestamp finishedAt = 7;
+}
+message GetAllMatchesRequest {
+  int64 cursor = 1;
+  int32 limit = 2;
+  string direction = 3;
+}
+message GetAllMatchesResponse {
+  int32 status = 1;
+  repeated string error = 2;
+  int64 forwardCursor = 3;
+  int64 backwardCursor = 4;
+  repeated MatchListItem matchlist = 5;
+}
+message GetMatchDetailByIdRequest {
+  int64 id = 1;
+}
+message GetMatchDetailByIdResponse {
+  int32 status = 1;
+  repeated string error = 2;
+  MatchDetails matchDetails = 3;
+}
+message GetMatchesByEpicIdRequest {
+  int64 cursor = 1;
+  int32 limit = 2;
+  string direction = 3;
+  string epicId = 4;
+}
+message GetMatchesByEpicIdResponse {
+  int32 status = 1;
+  repeated string error = 2;
+  int64 forwardCursor = 3;
+  int64 backwardCursor = 4;
+  repeated MatchListItem matchlist = 5;
+}
