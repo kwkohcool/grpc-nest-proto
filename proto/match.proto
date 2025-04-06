@@ -27,6 +27,8 @@ message VerifyMatchRequest {
   string matchUuid = 1;
   int64 shardsPlayers = 2;
   int64 shardsLeft = 3;
+  google.protobuf.Timestamp startedAt = 4;
+  google.protobuf.Timestamp finishedAt = 5;
 }
 message VerifyMatchResponse {
   int32 status = 1;
