@@ -19,15 +19,15 @@ message ConfigMatchRequest {
 message ConfigMatchResponse {
   int32 status = 1;
   repeated string error = 2;
-  int64 id = 3;
+  int32 id = 3;
   string matchUuid = 4;
   int32 shardsPerTicket = 5;
   int32 shardsForMission = 6;
 }
 message VerifyMatchRequest {
   string matchUuid = 1;
-  int64 shardsPlayers = 2;
-  int64 shardsLeft = 3;
+  int32 shardsPlayers = 2;
+  int32 shardsLeft = 3;
   string startedAt = 4;
   string finishedAt = 5;
 }
@@ -38,13 +38,13 @@ message VerifyMatchResponse {
   string result = 4;
 }
 message MatchListItem {
-  int64 id = 1;
+  int32 id = 1;
   string matchUuid = 2;
   string startedAt = 3;
   string finishedAt = 4;
 }
 message GetAllMatchesRequest {
-  int64 cursor = 1;
+  int32 cursor = 1;
   int32 limit = 2;
   string direction = 3;
 }
@@ -54,12 +54,12 @@ message GetAllMatchesResponse {
   repeated MatchListItem matchlist = 5;
 }
 message GetMatchDetailByIdRequest {
-  int64 id = 1;
+  int32 id = 1;
 }
 message GetMatchDetailByIdResponse {
   int32 status = 1;
   repeated string error = 2;
-  int64 id = 3;
+  int32 id = 3;
   string matchUuid = 4;
   int32 ticketsRequired = 5;
   int32 players = 6;
@@ -67,7 +67,7 @@ message GetMatchDetailByIdResponse {
   int32 shardsForMission = 8;
 }
 message GetMatchesByEpicIdRequest {
-  int64 cursor = 1;
+  int32 cursor = 1;
   int32 limit = 2;
   string direction = 3;
   string epicId = 4;
@@ -78,12 +78,12 @@ message GetMatchesByEpicIdResponse {
   repeated MatchListItem matchlist = 5;
 }
 message GetMatchResultByIdRequest {
-  int64 id = 1;
+  int32 id = 1;
 }
 message GetMatchResultByIdResponse {
   int32 status = 1;
   repeated string error = 2;
-  int64 matchId = 3;
+  int32 matchId = 3;
   string matchUuid = 4;
   int32 players = 5;
   int32 shardsPlayers = 6;
