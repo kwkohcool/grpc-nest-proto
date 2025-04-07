@@ -51,8 +51,6 @@ message GetAllMatchesRequest {
 message GetAllMatchesResponse {
   int32 status = 1;
   repeated string error = 2;
-  int64 forwardCursor = 3;
-  int64 backwardCursor = 4;
   repeated MatchListItem matchlist = 5;
 }
 message GetMatchDetailByIdRequest {
@@ -77,8 +75,6 @@ message GetMatchesByEpicIdRequest {
 message GetMatchesByEpicIdResponse {
   int32 status = 1;
   repeated string error = 2;
-  int64 forwardCursor = 3;
-  int64 backwardCursor = 4;
   repeated MatchListItem matchlist = 5;
 }
 message GetMatchResultByIdRequest {
@@ -89,8 +85,9 @@ message GetMatchResultByIdResponse {
   repeated string error = 2;
   int64 matchId = 3;
   string matchUuid = 4;
-  int32 shardsPlayers = 5;
-  int32 shardsLeft = 6;
-  string startedAt = 7;
-  string finishedAt = 8;
+  int32 players = 5;
+  int32 shardsPlayers = 6;
+  int32 shardsLeft = 7;
+  string startedAt = 8;
+  string finishedAt = 9;
 }
