@@ -6,8 +6,9 @@ service MatchService {
   rpc ConfigMatch (ConfigMatchRequest) returns (ConfigMatchResponse) {}
   rpc VerifyMatch (VerifyMatchRequest) returns (VerifyMatchResponse) {}
   rpc GetAllMatches (GetAllMatchesRequest) returns (GetAllMatchesResponse) {}
-  rpc GetMatchById (GetMatchDetailByIdRequest) returns (GetMatchDetailByIdResponse) {}
-  rpc GetMatchByEpicId (GetMatchesByEpicIdRequest) returns (GetMatchesByEpicIdResponse) {}
+  rpc GetMatchDetailById (GetMatchDetailByIdRequest) returns (GetMatchDetailByIdResponse) {}
+  rpc GetMatchesByEpicId (GetMatchesByEpicIdRequest) returns (GetMatchesByEpicIdResponse) {}
+  rpc GetMatchResultById (GetMatchResultByIdRequest) returns (GetMatchResultByIdResponse) {}
 }
 
 message ConfigMatchRequest {
@@ -21,6 +22,7 @@ message ConfigMatchResponse {
   int64 id = 3;
   string matchUuid = 4;
   int32 shardsPerTicket = 5;
+  int32 shardsForMission = 6;
 }
 message VerifyMatchRequest {
   string matchUuid = 1;
@@ -41,15 +43,6 @@ message MatchListItem {
   string startedAt = 3;
   string finishedAt = 4;
 }
-message MatchDetails {
-  int64 id = 1;
-  string matchUuid = 2;
-  int32 players = 3;
-  int64 shardsPlayers = 4;
-  int64 shardsLeft = 5;
-  string startedAt = 6;
-  string finishedAt = 7;
-}
 message GetAllMatchesRequest {
   int64 cursor = 1;
   int32 limit = 2;
@@ -68,7 +61,12 @@ message GetMatchDetailByIdRequest {
 message GetMatchDetailByIdResponse {
   int32 status = 1;
   repeated string error = 2;
-  MatchDetails matchDetails = 3;
+  int64 id = 3;
+  string matchUuid = 4;
+  int32 ticketsRequired = 5;
+  int32 players = 6;
+  int32 shardsPerTicket = 7;
+  int32 shardsForMission = 8;
 }
 message GetMatchesByEpicIdRequest {
   int64 cursor = 1;
@@ -82,4 +80,17 @@ message GetMatchesByEpicIdResponse {
   int64 forwardCursor = 3;
   int64 backwardCursor = 4;
   repeated MatchListItem matchlist = 5;
+}
+message GetMatchResultByIdRequest {
+  int64 id = 1;
+}
+message GetMatchResultByIdResponse {
+  int32 status = 1;
+  repeated string error = 2;
+  int64 matchId = 3;
+  string matchUuid = 4;
+  string shardsPlayers = 5;
+  string shardsLeft = 6;
+  string startedAt = 7;
+  string finishedAt = 8;
 }
