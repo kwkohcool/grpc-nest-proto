@@ -1,0 +1,47 @@
+syntax = "proto3";
+
+package battlepass;
+
+service BattlepassService {
+  rpc GetBuyBattlepassTx (GetBuyBattlepassTxRequest) returns (GetBuyBattlepassTxResponse);
+  rpc ExecuteBuyBattlepassTx (ExecuteBuyBattlepassTxRequest) returns (ExecuteBuyBattlepassTxResponse);
+  rpc GetBattlepassPurchaseInfo (GetBattlepassPurchaseInfoRequest) returns (GetBattlepassPurchaseInfoResponse);
+}
+
+message GetBuyBattlepassTxRequest {
+  string epicId = 1;
+  string suiAddress = 2;
+}
+
+message GetBuyBattlepassTxResponse {
+  int32 status = 1;
+  repeated string error = 2;
+  int32 purchaseId = 3;
+  string bytes = 4;
+  string digest = 5;
+}
+
+message ExecuteBuyBattlepassTxRequest {
+  int32 purchaseId = 1;
+  string epicId = 2;
+  string suiAddress = 3;
+  string digest = 4;
+  string signature = 5;
+}
+
+message ExecuteBuyBattlepassTxResponse {
+  int32 status = 1;
+  repeated string error = 2;
+  int32 purchaseId = 3;
+  string digest = 4;
+}
+
+message GetBattlepassPurchaseInfoRequest {
+  string epicId = 1;
+}
+
+message GetBattlepassPurchaseInfoResponse {
+  int32 status = 1;
+  repeated string error = 2;
+  int32 purchaseId = 3;
+}
