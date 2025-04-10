@@ -9,8 +9,9 @@ service BattlepassService {
 }
 
 message GetBuyBattlepassTxRequest {
-  string epicId = 1;
-  string suiAddress = 2;
+  int32 userId = 1;
+  string epicId = 2;
+  string suiAddress = 3;
 }
 
 message GetBuyBattlepassTxResponse {
@@ -23,10 +24,11 @@ message GetBuyBattlepassTxResponse {
 
 message ExecuteBuyBattlepassTxRequest {
   int32 purchaseId = 1;
-  string epicId = 2;
-  string suiAddress = 3;
-  string digest = 4;
-  string signature = 5;
+  int32 userId = 2;
+  string epicId = 3;
+  string suiAddress = 4;
+  string digest = 5;
+  string signature = 6;
 }
 
 message ExecuteBuyBattlepassTxResponse {
