@@ -94,7 +94,7 @@ message GetMatchResultByIdResponse {
   string finishedAt = 9;
 }
 message GetMatchResultByUuidRequest {
-  string Uuid = 1;
+  string uuid = 1;
 }
 message GetMatchResultByUuidResponse {
   int32 status = 1;
