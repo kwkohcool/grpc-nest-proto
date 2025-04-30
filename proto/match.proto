@@ -9,6 +9,7 @@ service MatchService {
   rpc GetMatchDetailById (GetMatchDetailByIdRequest) returns (GetMatchDetailByIdResponse) {}
   rpc GetMatchesByEpicId (GetMatchesByEpicIdRequest) returns (GetMatchesByEpicIdResponse) {}
   rpc GetMatchResultById (GetMatchResultByIdRequest) returns (GetMatchResultByIdResponse) {}
+  rpc GetMatchResultByUuid (GetMatchResultByUuidRequest) returns (GetMatchResultByUuidResponse) {}
   rpc GetPrizePoolBalanceBySeason (GetPrizePoolBalanceRequest) returns (GetPrizePoolBalanceResponse) {}
 }
 
@@ -82,6 +83,20 @@ message GetMatchResultByIdRequest {
   int32 id = 1;
 }
 message GetMatchResultByIdResponse {
+  int32 status = 1;
+  repeated string error = 2;
+  int32 matchId = 3;
+  string matchUuid = 4;
+  int32 players = 5;
+  int32 shardsPlayers = 6;
+  int32 shardsLeft = 7;
+  string startedAt = 8;
+  string finishedAt = 9;
+}
+message GetMatchResultByUuidRequest {
+  string Uuid = 1;
+}
+message GetMatchResultByUuidResponse {
   int32 status = 1;
   repeated string error = 2;
   int32 matchId = 3;
