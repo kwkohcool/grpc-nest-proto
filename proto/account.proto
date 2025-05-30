@@ -3,16 +3,16 @@ syntax = "proto3";
 package account;
 
 service AccountService {
-  rpc getAccountById(GetAccountByIdRequest) returns (GetAccountByIdResponse);
-  rpc attachSuiAccount(AttachSuiAccountRequest) returns (AttachSuiAccountResponse);
-  rpc attachEvmAccount(AttachEvmAccountRequest) returns (AttachEvmAccountResponse);
-  rpc detachSuiAccount(DetachSuiAccountRequest) returns (DetachSuiAccountResponse);
-  rpc detachEvmAccount(DetachEvmAccountRequest) returns (DetachEvmAccountResponse);
-  rpc getAdidasNft(GetAdidasNftRequest) returns (GetAdidasNftResponse);
-  rpc getAttachedSuiAddresses(GetAttachedSuiAddressesRequest) returns (GetAttachedSuiAddressesResponse);
-  rpc getAttachedEvmAddresses(GetAttachedEvmAddressesRequest) returns (GetAttachedEvmAddressesResponse);
-  rpc setActiveSuiAddress(SetActiveSuiAddressRequest) returns (SetActiveSuiAddressResponse);
-  rpc setActiveEvmAddress(SetActiveEvmAddressRequest) returns (SetActiveEvmAddressResponse);
+  rpc GetAccountById(GetAccountByIdRequest) returns (GetAccountByIdResponse);
+  rpc AttachSuiAccount(AttachSuiAccountRequest) returns (AttachSuiAccountResponse);
+  rpc AttachEvmAccount(AttachEvmAccountRequest) returns (AttachEvmAccountResponse);
+  rpc DetachSuiAccount(DetachSuiAccountRequest) returns (DetachSuiAccountResponse);
+  rpc DetachEvmAccount(DetachEvmAccountRequest) returns (DetachEvmAccountResponse);
+  rpc GetAdidasNft(GetAdidasNftRequest) returns (GetAdidasNftResponse);
+  rpc GetAttachedSuiAddresses(GetAttachedSuiAddressesRequest) returns (GetAttachedSuiAddressesResponse);
+  rpc GetAttachedEvmAddresses(GetAttachedEvmAddressesRequest) returns (GetAttachedEvmAddressesResponse);
+  rpc SetActiveSuiAddress(SetActiveSuiAddressRequest) returns (SetActiveSuiAddressResponse);
+  rpc SetActiveEvmAddress(SetActiveEvmAddressRequest) returns (SetActiveEvmAddressResponse);
 }
 
 message GetAccountByIdRequest {
