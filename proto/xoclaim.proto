@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package xoclaim;
+
+service XoClaimService {
+  rpc CheckEligibility(CheckEligibilityRequest) returns (CheckEligibilityResponse);
+  rpc ClaimTokens(ClaimTokensRequest) returns (ClaimTokensResponse);
+}
+
+message CheckEligibilityRequest {
+  uint64 user_id = 1;
+  string epic_account_id = 2;
+  string sui_address = 3;
+}
+
+message ClaimTokensRequest {
+  uint64 user_id = 1;
+  string epic_account_id = 2;
+  string sui_address = 3;
+}
+
+// The response message focuses solely on the data structure when the request succeeds. 
+// (Request failures, server errors, etc., are handled using gRPC status codes.)
+message CheckEligibilityResponse {
+  bool is_eligible = 1;
+  uint64 claimable_amount = 2;
+  // Business logic messages can still be useful.
+  // Ex.) "You have sufficient claim eligibility."
+  string message = 3;
+}
+
+message ClaimTokensResponse {
+  string transaction_id = 1;
+  uint64 claimed_amount = 2;
+}
