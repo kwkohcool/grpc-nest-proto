@@ -5,8 +5,6 @@ package xoclaim;
 service XoClaimService {
   rpc CheckEligibility(CheckEligibilityRequest) returns (CheckEligibilityResponse);
   rpc ClaimTokens(ClaimTokensRequest) returns (ClaimTokensResponse);
-  // Checks a user's total claimable amount for the TGE (Phase 0) only, ignoring time-based vesting rules.
-  rpc PreviewTgeClaims(CheckEligibilityRequest) returns (CheckEligibilityResponse);
 }
 
 message CheckEligibilityRequest {
