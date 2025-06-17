@@ -6,9 +6,9 @@ service AccountService {
   rpc GetAccountById(GetAccountByIdRequest) returns (GetAccountByIdResponse);
   rpc AttachSuiAccount(AttachSuiAccountRequest) returns (AttachSuiAccountResponse);
   rpc AttachEvmAccount(AttachEvmAccountRequest) returns (AttachEvmAccountResponse);
-  rpc DetachSuiAccount(DetachSuiAccountRequest) returns (DetachSuiAccountResponse);
+  /*rpc DetachSuiAccount(DetachSuiAccountRequest) returns (DetachSuiAccountResponse);
   rpc DetachEvmAccount(DetachEvmAccountRequest) returns (DetachEvmAccountResponse);
-  rpc GetAdidasNft(GetAdidasNftRequest) returns (GetAdidasNftResponse);
+  rpc GetAdidasNft(GetAdidasNftRequest) returns (GetAdidasNftResponse);*/
   rpc GetAttachedSuiAddresses(GetAttachedSuiAddressesRequest) returns (GetAttachedSuiAddressesResponse);
   rpc GetAttachedEvmAddresses(GetAttachedEvmAddressesRequest) returns (GetAttachedEvmAddressesResponse);
   rpc SetActiveSuiAddress(SetActiveSuiAddressRequest) returns (SetActiveSuiAddressResponse);
@@ -16,16 +16,16 @@ service AccountService {
 }
 
 message GetAccountByIdRequest {
-  string epicAccountId = 1;
+  string id = 1;
 }
 
 message GetAccountByIdResponse {
   int32 status = 1;
   repeated string error = 2;
-  string suiAddress = 3;
-  string evmAddress = 4;
-  string email = 5;
-  string userId = 6;
+  int32 id = 3;
+  string epicId = 4;
+  string suiAddress = 5;
+  string evmAddress = 6;
 }
 
 message AttachSuiAccountRequest {
@@ -59,7 +59,7 @@ message AttachEvmAccountResponse {
   string suiAddress = 5;
   string evmAddress = 6;  
 }
-
+/*
 message DetachSuiAccountRequest {
   int32 id = 1;
   string epicId = 2;
@@ -101,7 +101,7 @@ message GetAdidasNftResponse {
   repeated string error = 2;
   repeated string nfts = 3;
 }
-
+*/
 message GetAttachedSuiAddressesRequest {
   int32 id = 1;
 }
