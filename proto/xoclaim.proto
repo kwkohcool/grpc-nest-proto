@@ -5,6 +5,7 @@ package xoclaim;
 service XoClaimService {
   rpc CheckEligibility(CheckEligibilityRequest) returns (CheckEligibilityResponse);
   rpc ClaimTokens(ClaimTokensRequest) returns (ClaimTokensResponse);
+  rpc GetClaimSummary(GetClaimSummaryRequest) returns (GetClaimSummaryResponse);
 }
 
 message CheckEligibilityRequest {
@@ -32,4 +33,15 @@ message CheckEligibilityResponse {
 message ClaimTokensResponse {
   string transaction_id = 1;
   string claimed_amount = 2;
+}
+
+// --- NEW: Messages for GetClaimSummary ---
+message GetClaimSummaryRequest {
+  string user_id = 1;
+  string epic_account_id = 2;
+  string sui_address = 3;
+}
+
+message GetClaimSummaryResponse {
+  string total_claimed_amount = 1; // Using string for large u64 numbers
 }
