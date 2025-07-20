@@ -1,0 +1,113 @@
+syntax = "proto3";
+
+package gamesales;
+
+// ===================================================================
+//  Service Definition
+// ===================================================================
+
+// GameSalesService provides functionalities for purchasing products in the XOCIETY store.
+service GameSalesService {
+  // FR-1: Creates a purchase order and returns a transaction for the user to sign.
+  rpc CreatePurchaseOrder(CreatePurchaseOrderRequest) returns (CreatePurchaseOrderResponse);
+
+  // FR-2: Receives a user-signed transaction and submits it to the blockchain.
+  rpc ExecutePurchase(ExecutePurchaseRequest) returns (ExecutePurchaseResponse);
+
+  // FR-3: Allows the game server to retrieve 'PAID' orders to deliver the items.
+  rpc GetPaidOrders(GetPaidOrdersRequest) returns (GetPaidOrdersResponse);
+
+  // FR-4: Allows the game server to update the order status to 'DELIVERED' after item delivery.
+  rpc ConfirmItemsDelivered(ConfirmItemsDeliveredRequest) returns (ConfirmItemsDeliveredResponse);
+
+  // FR-5: Allows a user to retrieve their purchase history.
+  rpc GetUserPurchaseHistory(GetUserPurchaseHistoryRequest) returns (GetUserPurchaseHistoryResponse);
+}
+
+// ===================================================================
+//  Common Messages
+// ===================================================================
+
+// Enum representing the status of an order.
+enum OrderStatus {
+  ORDER_STATUS_UNSPECIFIED = 0; // Default, unspecified status.
+  PENDING = 1;                  // Order created, pending payment.
+  PAID = 2;                     // Payment completed, pending item delivery.
+  DELIVERED = 3;                // Item delivery completed.
+  FAILED = 4;                   // Order failed (e.g., payment failure, system error).
+}
+
+// Message representing order information.
+message Order {
+  string order_id = 1;        // Unique ID for the order.
+  string user_id = 2;         // User ID.
+  string product_id = 3;      // Product ID.
+  string product_name = 4;    // Product name.
+  string price = 5;           // Product price in XO coin (as a string to avoid precision loss).
+  OrderStatus status = 6;     // Status of the order.
+  string created_at = 7;      // Timestamp of when the order was created (ISO 8601 format, e.g., "2025-07-21T04:23:00Z").
+  string updated_at = 8;      // Timestamp of the last update (ISO 8601 format).
+}
+
+
+// ===================================================================
+//  RPC Method-specific Request/Response Messages
+// ===================================================================
+
+// --- CreatePurchaseOrder ---
+message CreatePurchaseOrderRequest {
+  string product_id = 1; // ID of the product to purchase.
+  string user_id = 2;    // ID of the user making the purchase.
+}
+
+message CreatePurchaseOrderResponse {
+  string order_id = 1; // ID of the created order.
+  string bytes = 2;    // The transaction data bytes for the user to sign (Base64 encoded).
+  string digest = 3;   // The digest of the transaction, required for the Enoki service call.
+}
+
+
+// --- ExecutePurchase ---
+message ExecutePurchaseRequest {
+  string order_id = 1;  // ID of the target order.
+  string user_id = 2;   // ID of the user executing the purchase.
+  string signature = 3; // The user's signature for the transaction (Base64 encoded).
+  string digest = 4;    // The digest of the transaction, originally from CreatePurchaseOrderResponse.
+}
+
+message ExecutePurchaseResponse {
+  string order_id = 1;       // ID of the processed order.
+  string transaction_id = 2; // ID (Digest) of the transaction submitted to the SUI blockchain.
+  bool success = 3;          // Indicates if the submission was successful.
+}
+
+
+// --- GetPaidOrders ---
+message GetPaidOrdersRequest {
+  string epic_id = 1; // Epic Games ID of the user to query.
+}
+
+message GetPaidOrdersResponse {
+  repeated Order orders = 1; // List of orders with 'PAID' status.
+}
+
+
+// --- ConfirmItemsDelivered ---
+message ConfirmItemsDeliveredRequest {
+  string epic_id = 1;            // Epic Games ID of the target user.
+  repeated string order_ids = 2; // List of order IDs to be updated to 'DELIVERED'.
+}
+
+message ConfirmItemsDeliveredResponse {
+  int32 updated_count = 1; // The number of successfully updated orders.
+}
+
+
+// --- GetUserPurchaseHistory ---
+message GetUserPurchaseHistoryRequest {
+  string user_id = 1; // ID of the user to query.
+}
+
+message GetUserPurchaseHistoryResponse {
+  repeated Order orders = 1; // List of orders with 'PAID' or 'DELIVERED' status.
+}
