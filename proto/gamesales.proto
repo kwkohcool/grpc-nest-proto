@@ -8,8 +8,11 @@ package gamesales;
 
 // GameSalesService provides functionalities for purchasing products in the XOCIETY store.
 service GameSalesService {
-  // FR-1: Creates a purchase order and returns a transaction for the user to sign.
-  rpc CreatePurchaseOrder(CreatePurchaseOrderRequest) returns (CreatePurchaseOrderResponse);
+  // Creates a purchase order and returns the created order details.
+  rpc CreatePurchaseOrder(CreatePurchaseOrderRequest) returns (Order);
+
+  // Prepares a payment for an existing order and returns a transaction for the user to sign.
+  rpc PreparePayment(PreparePaymentRequest) returns (PreparePaymentResponse);
 
   // FR-2: Receives a user-signed transaction and submits it to the blockchain.
   rpc ExecutePurchase(ExecutePurchaseRequest) returns (ExecutePurchaseResponse);
@@ -47,6 +50,7 @@ message Order {
   OrderStatus status = 6;     // Status of the order.
   string created_at = 7;      // Timestamp of when the order was created (ISO 8601 format, e.g., "2025-07-21T04:23:00Z").
   string updated_at = 8;      // Timestamp of the last update (ISO 8601 format).
+  string epic_id = 9;
 }
 
 
@@ -60,12 +64,16 @@ message CreatePurchaseOrderRequest {
   string user_id = 2;    // ID of the user making the purchase.
 }
 
-message CreatePurchaseOrderResponse {
+// --- PreparePayment ---
+message PreparePaymentRequest {
+  string order_id = 1; // ID of the order to prepare payment for.
+}
+
+message PreparePaymentResponse {
   string order_id = 1; // ID of the created order.
   string bytes = 2;    // The transaction data bytes for the user to sign (Base64 encoded).
   string digest = 3;   // The digest of the transaction, required for the Enoki service call.
 }
-
 
 // --- ExecutePurchase ---
 message ExecutePurchaseRequest {
