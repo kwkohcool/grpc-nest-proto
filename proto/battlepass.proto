@@ -6,6 +6,7 @@ service BattlepassService {
   rpc GetBuyBattlepassTx (GetBuyBattlepassTxRequest) returns (GetBuyBattlepassTxResponse);
   rpc ExecuteBuyBattlepassTx (ExecuteBuyBattlepassTxRequest) returns (ExecuteBuyBattlepassTxResponse);
   rpc GetBattlepassPurchaseInfo (GetBattlepassPurchaseInfoRequest) returns (GetBattlepassPurchaseInfoResponse);
+  rpc GetBattlepassPurchaseDetail (GetBattlepassPurchaseDetailRequest) returns (GetBattlepassPurchaseDetailResponse);
 }
 
 message GetBuyBattlepassTxRequest {
@@ -46,4 +47,14 @@ message GetBattlepassPurchaseInfoResponse {
   int32 status = 1;
   repeated string error = 2;
   int32 purchaseId = 3;
+}
+
+message GetBattlepassPurchaseDetailRequest {
+  string epicId = 1;
+}
+
+message GetBattlepassPurchaseDetailResponse {
+  int32 status = 1;
+  repeated string error = 2;
+  string purchasedAt = 3;
 }
