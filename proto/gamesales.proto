@@ -32,6 +32,7 @@ service GameSalesService {
 // ===================================================================
 
 // Enum representing the status of an order.
+// This is kept for server-side logic but is not directly used in the Order message.
 enum OrderStatus {
   ORDER_STATUS_UNSPECIFIED = 0; // Default, unspecified status.
   PENDING = 1;                  // Order created, pending payment.
@@ -47,7 +48,7 @@ message Order {
   string product_id = 3;      // Product ID.
   string product_name = 4;    // Product name.
   string price = 5;           // Product price in XO coin (as a string to avoid precision loss).
-  OrderStatus status = 6;     // Status of the order.
+  string status = 6;          // Status of the order.
   string created_at = 7;      // Timestamp of when the order was created (ISO 8601 format, e.g., "2025-07-21T04:23:00Z").
   string updated_at = 8;      // Timestamp of the last update (ISO 8601 format).
   string epic_id = 9;
