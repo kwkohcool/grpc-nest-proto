@@ -11,6 +11,10 @@ service GameSalesService {
   // Creates a purchase order and returns the created order details.
   rpc CreatePurchaseOrder(CreatePurchaseOrderRequest) returns (Order);
 
+  // Creates a purchase order using a specific SUI address provided by the user.
+  rpc CreatePurchaseOrderWithAddress(CreatePurchaseOrderWithAddressRequest) returns (Order);
+
+
   // Prepares a payment for an existing order and returns a transaction for the user to sign.
   rpc PreparePayment(PreparePaymentRequest) returns (PreparePaymentResponse);
 
@@ -63,6 +67,13 @@ message Order {
 message CreatePurchaseOrderRequest {
   string product_id = 1; // ID of the product to purchase.
   string user_id = 2;    // ID of the user making the purchase.
+}
+
+// --- CreatePurchaseOrderWithAddress ---
+message CreatePurchaseOrderWithAddressRequest {
+  string product_id = 1;
+  string user_id = 2;
+  string sui_address = 3; // The specific SUI address to use for this order.
 }
 
 // --- PreparePayment ---
