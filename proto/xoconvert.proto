@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package xoconvert;
+
+// The XO Pack conversion service.
+service XoConvertService {
+  // Retrieves the amount of XO Packs a user can convert.
+  rpc GetConvertibleAmount(GetConvertibleAmountRequest) returns (GetConvertibleAmountResponse);
+
+  // Requests the conversion of XO Packs to XO Coins.
+  rpc RequestConversion(RequestConversionRequest) returns (RequestConversionResponse);
+}
+
+// Request message for getting the convertible amount.
+message GetConvertibleAmountRequest {
+  string user_id = 1;
+}
+
+// Response message for the convertible amount.
+message GetConvertibleAmountResponse {
+  string amount = 1;
+}
+
+// Request message for a conversion.
+message RequestConversionRequest {
+  string user_id = 1;
+  string sui_address = 2;
+  string amount_to_convert = 3;
+}
+
+// Response message for a conversion request.
+message RequestConversionResponse {
+  string transaction_id = 1;
+  string status = 2; // e.g., "PENDING"
+  string message = 3;
+}
