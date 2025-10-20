@@ -1,0 +1,209 @@
+syntax = "proto3";
+
+import "google/protobuf/empty.proto";
+
+package fa;
+
+service FaService {
+  // Migration Service
+  rpc ProcessWebhook(MigrationWebhookRequest) returns (MigrationWebhookResponse);
+  // Info Service
+  rpc GetChainInfo(google.protobuf.Empty) returns (ChainInfoResponse);
+  rpc GetUserInfo(UserInfoRequest) returns (UserInfoResponse);
+  // Activity Service
+  rpc GetStakingHistory(ActivityRequest) returns (ActivityResponse);
+  rpc GetUnstakingHistory(ActivityRequest) returns (ActivityResponse);
+  rpc GetClaimHistory(ActivityRequest) returns (ActivityResponse);
+  rpc GetAllHistory(ActivityRequest) returns (ActivityResponse);
+  // NFT Service
+  rpc GetNftMetadata(NftRequest) returns (NftMetadataResponse);
+  // Collection Service
+  rpc GetAllNfts(CollectionRequest) returns (CollectionResponse);
+  rpc GetStakedNfts(CollectionRequest) returns (CollectionResponse);
+  rpc GetOwnedNfts(CollectionRequest) returns (CollectionResponse);
+  // Stake Service
+  rpc GetRewardConfig(google.protobuf.Empty) returns (RewardConfigResponse);
+  rpc ClaimRewards(ClaimRequest) returns (ClaimResponse);
+}
+
+message MigrationWebhookRequest {
+  string webhook_id = 1;
+  string id = 2;
+  string created_at = 3;
+  string type = 4;
+  MigrationEvent event = 5;
+  string signature = 6;
+  string raw_body = 7;
+}
+
+message MigrationEvent {
+  MigrationEventData data = 1;
+  string sequence_number = 2;
+  string network = 3;
+}
+
+message MigrationEventData {
+  repeated MigrationLogEntry logs = 1;
+}
+
+message MigrationLogEntry {
+  string address = 1;
+  repeated string topics = 2;
+  string data = 3;
+  string block_number = 4;
+  string transaction_hash = 5;
+  string transaction_index = 6;
+  string block_hash = 7;
+  string log_index = 8;
+  bool removed = 9;
+}
+
+message MigrationWebhookResponse {
+  bool success = 1;
+  string message = 2;
+  repeated string tx_digests = 3;
+  repeated string nft_object_ids = 4;
+}
+
+message UserInfoRequest {
+  string walletAddress = 1;
+}
+
+message UserInfoResponse {
+  double accumulated = 1;
+  double claimable = 2;
+  double total = 3;
+  double rewardBase = 4;
+  uint32 staked = 5;
+  uint32 nft = 6;
+  double tokenBalance = 7;
+  uint32 activeCount = 8;
+  double thisWeekStakingBoost = 9;
+  double thisWeekGradeBoost = 10;
+  RewardDetail rewardDetail = 11;
+}
+
+message RewardDetail {
+  GradeBreakdown default = 1;
+  Boost boost = 2;
+}
+
+message GradeBreakdown {
+  uint32 first = 1;
+  uint32 epic = 2;
+  uint32 rare = 3;
+  uint32 uncommon = 4;
+}
+
+message Boost {
+  double stakeCount = 1;
+  double grade = 2;
+  double weekly = 3;
+  double event = 4;
+}
+
+message ChainInfoResponse {
+  EthereumChainInfo ethereum = 1;
+  SuiChainInfo sui = 2;
+}
+
+message EthereumChainInfo {
+  string xocietyFrontier = 1;
+  string migration = 2;
+  uint32 chainId = 3;
+  string network = 4;
+}
+
+message SuiChainInfo {
+  string packageId = 1;
+  string stakingPoolId = 2;
+  string network = 3;
+}
+
+message ActivityRequest {
+  string walletAddress = 1;
+  uint32 page = 2;
+  uint32 limit = 3;
+}
+
+message ActivityResponse {
+  repeated ActivityEvent data = 1;
+  uint32 total = 2;
+  uint32 page = 3;
+  uint32 totalPages = 4;
+  bool hasNextPage = 5;
+}
+
+message ActivityEvent {
+  string digest = 1;
+  string timestamp = 2;
+  string eventType = 3;
+  string objectId = 4;
+  uint32 tokenId = 5;
+  string rewardAmount = 6;
+}
+
+message NftRequest {
+  string objectId = 1;
+}
+
+message NftMetadataResponse {
+  string objectId = 1;
+  uint32 tokenId = 2;
+  string name = 3;
+  string description = 4;
+  string image = 5;
+  bool isStaked = 6;
+  bool isActive = 7;
+  repeated NftAttribute attributes = 8;
+  string stakedAt = 9;
+}
+
+message NftAttribute {
+  string trait_type = 1;
+  string value = 2;
+}
+
+message CollectionRequest {
+  string walletAddress = 1;
+}
+
+message CollectionResponse {
+  repeated NftMetadataResponse nfts = 1;
+  uint32 total = 2;
+  uint32 staked = 3;
+  uint32 nft = 4;
+}
+
+message RewardConfigResponse {
+  RewardTable rewardTable = 1;
+}
+
+message RewardTable {
+  uint32 MaxStakableCount = 1;
+  uint32 GradeBoostMax = 2;
+  uint32 WeeklyClaimBoost = 3;
+  uint32 EventBoost = 4;
+  repeated uint32 ClaimTargets = 5;
+  GradeReward DefaultReward = 6;
+  GradeReward GradeBoostReward = 7;
+  repeated uint32 StakeCountBoost = 8;
+}
+
+message GradeReward {
+  uint32 Common = 1;
+  uint32 Uncommon = 2;
+  uint32 Rare = 3;
+  uint32 Epic = 4;
+  uint32 First = 5;
+}
+
+message ClaimRequest {
+  string wallet_address = 1;
+}
+
+message ClaimResponse {
+  bool success = 1;
+  string message = 2;
+  string amount = 3;
+}
