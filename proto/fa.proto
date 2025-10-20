@@ -24,6 +24,7 @@ service FaService {
   // Stake Service
   rpc GetRewardConfig(google.protobuf.Empty) returns (RewardConfigResponse);
   rpc ClaimRewards(ClaimRequest) returns (ClaimResponse);
+  rpc LogTransaction(LogTransactionRequest) returns (LogTransactionResponse);
 }
 
 message MigrationWebhookRequest {
@@ -206,4 +207,16 @@ message ClaimResponse {
   bool success = 1;
   string message = 2;
   string amount = 3;
+}
+
+message LogTransactionRequest {
+  string user_id = 1;
+  string sui_address = 2;
+  string action = 3;
+  string tx_digest = 4;
+}
+
+message LogTransactionResponse {
+  bool success = 1;
+  string message = 2;
 }
