@@ -1,0 +1,246 @@
+// proto/fastaking.v1.proto
+syntax = "proto3";
+
+// Using the 'fastaking' package name as requested to avoid underscores
+package fastaking;
+
+// import "google/protobuf/timestamp.proto";
+import "google/protobuf/empty.proto";
+
+//================================================================
+// Service Definition: FaStaking (PRD FR-1, FR-2, FR-3, NFR-5)
+// A unified service for Frontier Avatar staking, rewards, and info.
+//================================================================
+service FaStaking {
+  // (FR-1) Logs a new staking or unstaking event.
+  rpc LogStakingActivity (LogStakingActivityRequest) returns (google.protobuf.Empty);
+
+  // (FR-3) Retrieves the staking activity log for a user.
+  rpc GetStakingActivity (GetStakingActivityRequest) returns (GetStakingActivityResponse);
+
+  // (FR-2) Gets the current staking status and calculated rewards for a user.
+  rpc GetStakingStatus (GetStakingStatusRequest) returns (GetStakingStatusResponse);
+
+  // (NEW / PRD 1.2) Claims the calculated rewards for a user.
+  rpc ClaimReward (ClaimRewardRequest) returns (ClaimRewardResponse);
+
+  // (NFR-5) Retrieves the current reward phase configuration.
+  rpc GetRewardConfig (google.protobuf.Empty) returns (RewardConfigResponse);
+
+  // ADDED: (Feature 1) Retrieves the user's reward claim history.
+  rpc GetClaimHistory(GetClaimHistoryRequest) returns (GetClaimHistoryResponse);
+
+  // ADDED: (Feature 2) Retrieves the user's summary info.
+  rpc GetUserInfo(UserInfoRequest) returns (UserInfoResponse);
+  
+  // (NFR-2) Standard liveness/readiness check.
+  // This is a simple, explicit check. 
+  // We will *also* implement the gRPC Health Checking Protocol (tonic_health)
+  // for Kubernetes probes, as discussed earlier.
+  rpc CheckHealth (google.protobuf.Empty) returns (HealthCheckResponse);
+}
+
+//================================================================
+// Message Definitions
+//================================================================
+
+// --- Enum for Staking Action ---
+enum StakingAction {
+  UNSPECIFIED = 0;
+  STAKING = 1;
+  UNSTAKING = 2;
+}
+
+// --- Messages for LogStakingActivity (FR-1) ---
+message LogStakingActivityRequest {
+  string user_id = 1; // web_user.auth_user.id (UUID)
+  uint32 nft_id = 2;  // u16 validation will be done in the service logic
+  StakingAction action = 3;
+  string transaction_digest = 4; // SUI transaction digest
+  string sui_address = 5;
+}
+
+// --- Messages for GetStakingActivity (FR-3) ---
+message StakingActivity {
+  string id = 1;
+  uint32 nft_id = 2;
+  StakingAction action = 3;
+  string transaction_digest = 4;
+  // CHANGED: Using string (e.g., ISO 8601 format "YYYY-MM-DDTHH:MM:SSZ")
+  string event_timestamp = 5; // from created_at
+}
+
+message GetStakingActivityRequest {
+  string user_id = 1;
+  string sui_address = 2;
+  // CHANGED: Use string for u64 compatibility
+  string cursor = 3; // (0 for 'top'/'bottom')
+  string direction = 4;
+  int32 limit = 5;
+}
+
+message GetStakingActivityResponse {
+  repeated StakingActivity activities = 1;
+  string next_cursor = 2;
+}
+
+// --- Messages for GetStakingStatus (FR-2) ---
+message GetStakingStatusRequest {
+  string user_id = 1;
+}
+
+message StakedNft {
+  uint32 nft_id = 1;
+  string staked_at = 2;
+}
+
+message GetStakingStatusResponse {
+  int32 total_staked_count = 1;
+  repeated StakedNft staked_nfts = 2; // (Staked NFTs list currently)
+
+  // ADDED: The new reward model
+  // (Using string for high-precision u64/BigInt)
+  string total_reward = 3;
+  string claimed_reward = 4;
+  string claimable_reward = 5;
+}
+
+// Helper message for nested reward structures
+message GradeReward {
+  uint32 Common = 1;
+  uint32 Uncommon = 2;
+  uint32 Rare = 3;
+  uint32 Epic = 4;
+  uint32 First = 5;
+}
+
+// The main reward configuration structure
+message RewardTable {
+  uint32 MaxStakableCount = 1;
+  uint32 GradeBoostMax = 2;
+  uint32 WeeklyClaimBoost = 3;
+  uint32 EventBoost = 4;
+  
+  // JSON in DB, parsed into array for gRPC
+  repeated uint32 ClaimTargets = 5; 
+  
+  GradeReward DefaultReward = 6;
+  GradeReward GradeBoostReward = 7;
+  
+  // JSON in DB, parsed into array for gRPC
+  repeated uint32 StakeCountBoost = 8;
+
+  // We also include these fields from the DB, as they might be useful
+  // (Even if the original TS proto didn't show them)
+  string id = 9; // u64
+  string expire_date = 10; // Timestamp
+}
+
+message RewardConfigResponse {
+  RewardTable rewardTable = 1;
+}
+
+// --- Messages for CheckHealth (NFR-2) ---
+message HealthCheckResponse {
+  string status = 1; // e.g., "SERVING"
+}
+
+//================================================================
+// ADDED: Messages for ClaimReward (PRD 1.2)
+//================================================================
+message ClaimRewardRequest {
+  string user_id = 1;
+}
+
+message ClaimRewardResponse {
+  bool success = 1;
+  string message = 2; // e.g., "Reward claim successful" or error details
+  
+  // The amount that was successfully claimed.
+  // Using string for high-precision decimal numbers.
+  string claimed_amount = 3; 
+}
+
+// A single reward claim transaction that has been logged.
+message ClaimHistoryEntry {
+  // The queue_id, used as the cursor (u64)
+  string id = 1; 
+  // The amount claimed (raw u64, 9 decimals)
+  string claimed_amount = 2; 
+  // The SUI transaction digest
+  string transaction_digest = 3;
+  // The timestamp of the claim (ISO 8601 string)
+  string event_timestamp = 4;
+}
+
+message GetClaimHistoryRequest {
+  string user_id = 1;
+  string sui_address = 2; // Filter by address, same as GetStakingActivity
+  // The `queue_id` to start from (string u64)
+  string cursor = 3; 
+  // "asc", "desc", "top", "bottom"
+  string direction = 4;
+  int32 limit = 5;
+}
+
+message GetClaimHistoryResponse {
+  repeated ClaimHistoryEntry claims = 1;
+  // The `queue_id` of the last item for the next cursor (string u64)
+  string next_cursor = 2;
+}
+
+// ================================================================
+// ADDED: Messages for GetUserInfo
+// ================================================================
+
+// Using user_id for consistency with other RPCs
+message UserInfoRequest {
+  string user_id = 1;
+  string sui_address = 2; // For sui_account_info validation
+}
+
+// TS `GradeBreakdown` -> Renamed to `RewardBreakdown`
+// (Contains raw u64 XO values)
+message RewardBreakdown {
+  string first = 1;
+  string epic = 2;
+  string rare = 3;
+  string uncommon = 4;
+  string common = 5;
+}
+
+// TS `Boost` -> Renamed to `BoostRates`
+// (Contains decimal strings, e.g., "0.1" for 10%)
+message BoostRates {
+  string stake_count_percent = 1;
+  string grade_percent = 2;
+  string weekly_percent = 3;
+  string event_percent = 4;
+}
+
+// TS `RewardDetail`
+message RewardDetail {
+  RewardBreakdown default_reward = 1;
+  BoostRates boost = 2;
+}
+
+message UserInfoResponse {
+  // Q2/Q4: All reward values are string (raw u64)
+  string accumulated_reward = 1;
+  string claimable_reward = 2;
+  string total_reward = 3;
+  string reward_base = 4; // Current week's base reward
+
+  uint32 staked_count = 5;
+  uint32 total_nft_count = 6; // (staked + owned)
+  uint32 active_count = 7;    // (staked this week)
+  
+  // Current week's boost *rewards* (not percentages)
+  string this_week_staking_boost_reward = 8;
+  string this_week_grade_boost_reward = 9;
+
+  RewardDetail reward_detail = 10;
+  
+  // SUI RPC Result (raw u64)
+  string token_balance = 11;
+}

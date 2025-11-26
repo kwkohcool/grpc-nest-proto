@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package fanft;
+
+// Combined service for Frontier Avatar NFT queries
+service FaNftService {
+  // --- FR-1 ---
+  // Get individual NFT metadata (PRD FR-1)
+  rpc GetNftMetadata(NftRequest) returns (NftMetadataResponse);
+
+  // --- FR-2 ---
+  // Get all NFTs (owned + staked) for a wallet (PRD FR-2)
+  rpc GetAllNfts(CollectionRequest) returns (CollectionResponse);
+
+  // Get only staked NFTs for a wallet (PRD FR-2)
+  rpc GetStakedNfts(CollectionRequest) returns (CollectionResponse);
+
+  // Get only owned (not staked) NFTs for a wallet (PRD FR-2)
+  rpc GetOwnedNfts(CollectionRequest) returns (CollectionResponse);
+}
+
+message NftRequest {
+  string objectId = 1; // SUI Object ID
+}
+
+message CollectionRequest {
+  string walletAddress = 1; // User's SUI wallet address
+}
+
+// Response for FR-1
+message NftMetadataResponse {
+  string objectId = 1;
+  string tokenId = 2; // (nft_id from fa_metadata)
+  string owner = 3;   // Dynamic data from SUI
+  bool isStaked = 4;  // Dynamic data from SUI
+  uint64 stakedAt = 5; // Dynamic data from SUI (Timestamp)
+  
+  // Static data from In-Memory Cache
+  string name = 6;
+  string image = 7;
+  string grade = 8; // (e.g., 'Common', 'Rare')
+  repeated Attribute attributes = 9;
+}
+
+message Attribute {
+  string trait_type = 1;
+  string value = 2;
+}
+
+// Response for FR-2
+message CollectionResponse {
+  message Summary {
+    int32 total = 1;  // Total NFTs (owned + staked)
+    int32 owned = 2;  // Count of owned NFTs
+    int32 staked = 3; // Count of staked NFTs
+  }
+
+  Summary summary = 1;
+  repeated NftMetadataResponse nfts = 2; // List of NFT metadata
+}
