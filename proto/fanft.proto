@@ -17,6 +17,10 @@ service FaNftService {
 
   // Get only owned (not staked) NFTs for a wallet (PRD FR-2)
   rpc GetOwnedNfts(CollectionRequest) returns (CollectionResponse);
+
+  // [NEW] Lightweight RPC for Game Integration
+  // Returns only the list of token IDs (owned + staked)
+  rpc GetAllNftIds(CollectionRequest) returns (NftIdResponse);
 }
 
 message NftRequest {
@@ -57,4 +61,9 @@ message CollectionResponse {
 
   Summary summary = 1;
   repeated NftMetadataResponse nfts = 2; // List of NFT metadata
+}
+
+// [NEW] Response message containing only token IDs
+message NftIdResponse {
+  repeated string token_ids = 1;
 }
