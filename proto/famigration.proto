@@ -1,0 +1,67 @@
+syntax = "proto3";
+
+package famigration;
+
+// ==================================
+// Migration Service
+// ==================================
+service MigrationService {
+  rpc ProcessWebhook(MigrationWebhookRequest) returns (MigrationWebhookResponse);
+}
+
+// Process Webhook
+message MigrationWebhookRequest {
+  string webhook_id = 1;
+  string id = 2;
+  string created_at = 3;
+  string type = 4;
+  MigrationEvent event = 5;
+  string signature = 6;
+  string raw_body = 7;
+}
+
+message MigrationEvent {
+  MigrationEventData data = 1;
+  string sequence_number = 2;
+  string network = 3;
+}
+
+message MigrationEventData {
+  MigrationBlockData block = 1;
+  repeated MigrationLogEntry logs = 2;
+}
+
+message MigrationBlockData {
+  repeated MigrationLogEntry logs = 1;
+}
+
+message MigrationLogEntry {
+  string address = 1;
+  repeated string topics = 2;
+  string data = 3;
+  string block_number = 4;
+  string transaction_hash = 5;
+  string transaction_index = 6;
+  string block_hash = 7;
+  string log_index = 8;
+  bool removed = 9;
+  MigrationAccount account = 10;
+  MigrationTransaction transaction = 11;
+}
+
+message MigrationAccount {
+  string address = 1;
+}
+
+message MigrationTransaction {
+  string hash = 1;
+}
+
+message MigrationWebhookResponse {
+  bool success = 1;
+  string message = 2;
+  repeated string tx_digests = 3;
+  repeated string nft_object_ids = 4;
+  repeated int32 minted_tokens = 5;
+  repeated int32 skipped_tokens = 6;
+}
