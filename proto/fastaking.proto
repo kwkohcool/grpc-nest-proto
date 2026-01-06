@@ -162,32 +162,32 @@ message GetAdminUserInfoRequest {
 
 message AdminStakeInfo {
   string nft_id = 1;
-  uint64 token_id = 2;
-  uint64 stake_timestamp_ms = 3;
+  string token_id = 2;
+  string stake_timestamp_ms = 3;
   string grade = 4;
 }
 
 message AdminTimelineInterval {
-  uint64 token_id = 1;
-  uint64 start_ms = 2;
-  uint64 end_ms = 3; // 0 if active
+  string token_id = 1;
+  string start_ms = 2;
+  string end_ms = 3; // 0 if active
   string grade = 4;
   bool is_effective = 5;
 }
 
 message AdminWeeklyReward {
   string week_start_date = 1;
-  uint64 reward_amount = 2;
-  repeated uint64 counted_token_ids = 3;
+  string reward_amount = 2;
+  repeated string counted_token_ids = 3;
 }
 
 message GetAdminUserInfoResponse {
   string wallet_address = 1;
-  uint64 user_id = 2; 
+  string user_id = 2; 
 
   repeated AdminStakeInfo current_stakes = 3;
   repeated AdminTimelineInterval timeline = 4;
   
-  uint64 total_reward = 5;
+  string total_reward = 5;
   repeated AdminWeeklyReward weekly_rewards = 6;
 }
