@@ -1,0 +1,122 @@
+syntax = "proto3";
+
+package gamelog.v1;
+
+service GamelogService {
+  // TX #1
+  rpc LogMatchMetadata (MatchMetadata) returns (Empty);
+  // TX #2
+  rpc LogPlayerIdentity (PlayerIdentity) returns (Empty);
+  // TX #3
+  rpc LogSurvivalOutcome (SurvivalOutcome) returns (Empty);
+  // TX #4
+  rpc LogCombatCoreStats (CombatCoreStats) returns (Empty);
+  // TX #5
+  rpc LogDamageBreakdown (DamageBreakdown) returns (Empty);
+  // TX #6
+  rpc LogSkillUsage (SkillUsage) returns (Empty);
+  // TX #7
+  rpc LogPlayerProgression (PlayerProgression) returns (Empty);
+  // TX #8
+  rpc LogMotusEconomy (MotusEconomy) returns (Empty);
+  // TX #9
+  rpc LogItemAcquisition (ItemAcquisition) returns (Empty);
+  // TX #10
+  rpc LogSupportUtilityActions (SupportUtilityActions) returns (Empty);
+  // TX #11
+  rpc LogMonsterKillBreakdown (MonsterKillBreakdown) returns (Empty);
+}
+
+message Empty {}
+
+message MatchMetadata {
+  string match_uuid = 1;
+  string player_id = 2;
+  string match_date = 3;
+  uint64 player_count = 4;
+}
+
+message PlayerIdentity {
+  string match_uuid = 1;
+  string player_id = 2;
+}
+
+message SurvivalOutcome {
+  string match_uuid = 1;
+  string player_id = 2;
+  bool escape_success = 3;
+  uint64 time_survived = 4;
+  uint64 deaths = 5;
+}
+
+message CombatCoreStats {
+  string match_uuid = 1;
+  string player_id = 2;
+  uint64 kills = 3;
+  uint64 assists = 4;
+  float accuracy = 5;
+}
+
+message DamageBreakdown {
+  string match_uuid = 1;
+  string player_id = 2;
+  uint64 damage_to_players_by_gun = 3;
+  uint64 damage_to_monsters_by_gun = 4;
+  uint64 damage_to_players_by_active = 5;
+  uint64 damage_to_monsters_by_active = 6;
+  uint64 damage_to_players_by_ultimate = 7;
+  uint64 damage_to_monsters_by_ultimate = 8;
+}
+
+message SkillUsage {
+  string match_uuid = 1;
+  string player_id = 2;
+  uint64 active_skill_uses = 3;
+  uint64 ultimate_skill_uses = 4;
+  string selected_active_skill = 5;
+  string selected_passive_skill = 6;
+  string selected_ultimate_skill = 7;
+}
+
+message PlayerProgression {
+  string match_uuid = 1;
+  string player_id = 2;
+  uint64 level_reached = 3;
+  uint64 total_xp_earned = 4;
+}
+
+message MotusEconomy {
+  string match_uuid = 1;
+  string player_id = 2;
+  uint64 total_motus = 3;
+  uint64 extracted_motus = 4;
+  uint64 unextracted_motus = 5;
+  uint64 unrecovered_motus = 6;
+  uint64 earned_credit = 7;
+}
+
+message ItemAcquisition {
+  string match_uuid = 1;
+  string player_id = 2;
+  uint64 weapons_acquired = 3;
+  uint64 armors_acquired = 4;
+  uint64 hp_potions_acquired = 5;
+  uint64 sp_potions_acquired = 6;
+  uint64 grenades_acquired = 7;
+}
+
+message SupportUtilityActions {
+  string match_uuid = 1;
+  string player_id = 2;
+  uint64 revive_allies = 3;
+  uint64 monster_beacon_opens = 4;
+  float distance_traveled = 5;
+}
+
+message MonsterKillBreakdown {
+  string match_uuid = 1;
+  string player_id = 2;
+  uint64 normal_monsters_killed = 3;
+  uint64 elite_monsters_killed = 4;
+  uint64 boss_monsters_killed = 5;
+}
