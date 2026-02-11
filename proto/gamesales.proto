@@ -14,7 +14,6 @@ service GameSalesService {
   // Creates a purchase order using a specific SUI address provided by the user.
   rpc CreatePurchaseOrderWithAddress(CreatePurchaseOrderWithAddressRequest) returns (Order);
 
-
   // Prepares a payment for an existing order and returns a transaction for the user to sign.
   rpc PreparePayment(PreparePaymentRequest) returns (PreparePaymentResponse);
 
@@ -29,6 +28,12 @@ service GameSalesService {
 
   // FR-5: Allows a user to retrieve their purchase history.
   rpc GetUserPurchaseHistory(GetUserPurchaseHistoryRequest) returns (GetUserPurchaseHistoryResponse);
+
+  // FR-6: Retrieves a list of products filtered by type.
+  rpc GetProducts(GetProductsRequest) returns (GetProductsResponse);
+
+  // FR-7: Retrieves a product by its ingame_id.
+  rpc GetProductByIngameId(GetProductByIngameIdRequest) returns (GetProductByIngameIdResponse);
 }
 
 // ===================================================================
@@ -39,23 +44,25 @@ service GameSalesService {
 // This is kept for server-side logic but is not directly used in the Order message.
 enum OrderStatus {
   ORDER_STATUS_UNSPECIFIED = 0; // Default, unspecified status.
-  PENDING = 1;                  // Order created, pending payment.
-  PAID = 2;                     // Payment completed, pending item delivery.
-  DELIVERED = 3;                // Item delivery completed.
-  FAILED = 4;                   // Order failed (e.g., payment failure, system error).
+  PENDING = 1; // Order created, pending payment.
+  PAID = 2; // Payment completed, pending item delivery.
+  DELIVERED = 3; // Item delivery completed.
+  FAILED = 4; // Order failed (e.g., payment failure, system error).
 }
 
 // Message representing order information.
 message Order {
-  string order_id = 1;        // Unique ID for the order.
-  string user_id = 2;         // User ID.
-  string product_id = 3;      // Product ID.
-  string product_name = 4;    // Product name.
-  string price = 5;           // Product price in XO coin (as a string to avoid precision loss).
-  string status = 6;          // Status of the order.
-  string created_at = 7;      // Timestamp of when the order was created (ISO 8601 format, e.g., "2025-07-21T04:23:00Z").
-  string updated_at = 8;      // Timestamp of the last update (ISO 8601 format).
+  string order_id = 1; // Unique ID for the order.
+  string user_id = 2; // User ID.
+  string product_id = 3; // Product ID.
+  string product_name = 4; // Product name.
+  string price = 5; // Product price in XO coin (as a string to avoid precision loss).
+  string status = 6; // Status of the order.
+  string created_at = 7; // Timestamp of when the order was created (ISO 8601 format, e.g., "2025-07-21T04:23:00Z").
+  string updated_at = 8; // Timestamp of the last update (ISO 8601 format).
   string epic_id = 9;
+  string product_type = 10; // "BUNDLE", "WEARABLE", "CURRENCY"
+  string ingame_id = 11;
 }
 
 
@@ -66,7 +73,7 @@ message Order {
 // --- CreatePurchaseOrder ---
 message CreatePurchaseOrderRequest {
   string product_id = 1; // ID of the product to purchase.
-  string user_id = 2;    // ID of the user making the purchase.
+  string user_id = 2; // ID of the user making the purchase.
 }
 
 // --- CreatePurchaseOrderWithAddress ---
@@ -83,22 +90,22 @@ message PreparePaymentRequest {
 
 message PreparePaymentResponse {
   string order_id = 1; // ID of the created order.
-  string bytes = 2;    // The transaction data bytes for the user to sign (Base64 encoded).
-  string digest = 3;   // The digest of the transaction, required for the Enoki service call.
+  string bytes = 2; // The transaction data bytes for the user to sign (Base64 encoded).
+  string digest = 3; // The digest of the transaction, required for the Enoki service call.
 }
 
 // --- ExecutePurchase ---
 message ExecutePurchaseRequest {
-  string order_id = 1;  // ID of the target order.
-  string user_id = 2;   // ID of the user executing the purchase.
+  string order_id = 1; // ID of the target order.
+  string user_id = 2; // ID of the user executing the purchase.
   string signature = 3; // The user's signature for the transaction (Base64 encoded).
-  string digest = 4;    // The digest of the transaction, originally from CreatePurchaseOrderResponse.
+  string digest = 4; // The digest of the transaction, originally from CreatePurchaseOrderResponse.
 }
 
 message ExecutePurchaseResponse {
-  string order_id = 1;       // ID of the processed order.
+  string order_id = 1; // ID of the processed order.
   string transaction_id = 2; // ID (Digest) of the transaction submitted to the SUI blockchain.
-  bool success = 3;          // Indicates if the submission was successful.
+  bool success = 3; // Indicates if the submission was successful.
 }
 
 
@@ -114,7 +121,7 @@ message GetPaidOrdersResponse {
 
 // --- ConfirmItemsDelivered ---
 message ConfirmItemsDeliveredRequest {
-  string epic_id = 1;            // Epic Games ID of the target user.
+  string epic_id = 1; // Epic Games ID of the target user.
   repeated string order_ids = 2; // List of order IDs to be updated to 'DELIVERED'.
 }
 
@@ -130,4 +137,37 @@ message GetUserPurchaseHistoryRequest {
 
 message GetUserPurchaseHistoryResponse {
   repeated Order orders = 1; // List of orders with 'PAID' or 'DELIVERED' status.
+}
+
+// --- GetProducts ---
+message GetProductsRequest {
+  string product_type = 1; // "WEARABLE", "BUNDLE", "CURRENCY"
+}
+
+message Product {
+  string product_id = 1;
+  string name = 2;
+  string description = 3;
+  string price_in_usd = 4;
+  string price_in_xo = 5;
+  string product_type = 6;
+  string ingame_id = 7;
+  int32 discount_rate_bp = 8;
+  bool is_featured = 9;
+  string sales_start_at = 10;
+  string sales_end_at = 11;
+  bool is_one_time_purchase = 12;
+}
+
+message GetProductsResponse {
+  repeated Product products = 1;
+}
+
+// --- GetProductByIngameId ---
+message GetProductByIngameIdRequest {
+  string ingame_id = 1;
+}
+
+message GetProductByIngameIdResponse {
+  Product product = 1;
 }
